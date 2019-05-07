@@ -69,7 +69,7 @@ class AddressBook {
       el.classList.add("contact-entry");
       el.innerHTML = `
       ${this.contacts[index].displayHTML()}
-      <button type="button" i="${index}" class="remove-btn">Remove</button>
+      <button type="button" i="${index}" class="remove-btn"><i class="material-icons">delete</i></button>
       `;
       contactsContainer.append(el);
     }
