@@ -72,6 +72,8 @@ class AddressBook {
       <button type="button" i="${index}" class="remove-btn"><i class="material-icons">delete</i></button>
       `;
       contactsContainer.append(el);
+      //el.children[4].addEventListener("click", removeContact); //add a listener to the object
+      console.log(el.children);
     }
   }
 }
@@ -79,6 +81,7 @@ class AddressBook {
 //needed variables
 const addressBook = new AddressBook();
 const main = document.querySelector("main");
+//const addButton = document.querySelector(".add-btn");
 
 function addContact() {
   const formInputs = document.querySelectorAll("form>input");
@@ -88,16 +91,26 @@ function addContact() {
     input.value = ""; //clear out the input after getting the info
   }
   addressBook.add(info);
+  addressBook.display();
+}
+
+function removeContact(event) {
+  let target = event.target;
+  if (target.tagName.toLowerCase() === "i") { //if the icon is clicked
+    target = target.parentNode; //set the target as the button anyway
+  }
+  addressBook.deleteAt(target.attributes["i"].value);
+  addressBook.display();
 }
 
 addressBook.display(); //initialize the contacts
+//addButton.addEventListener("click", addContact);
 
+//TODO: handle clicking the icon as well
 main.addEventListener("click", function(event) { //add a listener to main that will only work on the buttons
   if (event.target.classList.contains("add-btn")) {
     addContact();
-    addressBook.display();
-  } else if (event.target.classList.contains("remove-btn")) {
-    addressBook.deleteAt(event.target.attributes["i"].value);
-    addressBook.display();
+  } else if (event.target.classList.contains("remove-btn") || event.target.parentNode.classList.contains("remove-btn")) {
+    removeContact(event);
   }
 });
