@@ -59,12 +59,11 @@ class AddressBook {
       console.log(`${index}. ${this.contacts[index].print()}`);
     }
   }
-
   //display all the contacts in the HTML
   display() {
     const contactsContainer = document.querySelector(".contacts-container");
     contactsContainer.innerHTML = ""; //remove the stuff already there
-    for (let index in this.contacts) {
+    for (let index in this.contacts) { //create an HTML element for each contact
       let el = document.createElement("div");
       el.classList.add("contact-entry");
       el.innerHTML = `
@@ -72,45 +71,44 @@ class AddressBook {
       <button type="button" i="${index}" class="remove-btn"><i class="material-icons">delete</i></button>
       `;
       contactsContainer.append(el);
-      //el.children[4].addEventListener("click", removeContact); //add a listener to the object
-      console.log(el.children);
     }
   }
 }
 
 //needed variables
 const addressBook = new AddressBook();
-const main = document.querySelector("main");
-//const addButton = document.querySelector(".add-btn");
+const form = document.querySelector("form");
+const contactsContainer = document.querySelector(".contacts-container");
 
-function addContact() {
+//add contact to the addressBook and redisplay the container
+function addContact(event) {
+  event.preventDefault(); //avoid the normal submit functionality
   const formInputs = document.querySelectorAll("form>input");
   const info = [];
   for (let input of formInputs) {
     info.push(input.value); //add the info to the array
     input.value = ""; //clear out the input after getting the info
   }
-  addressBook.add(info);
-  addressBook.display();
+  addressBook.add(info); //add the contact to the addressBook
+  addressBook.display(); //redisplay the contact container
+  formInputs[0].focus(); //set focus to the first input again
 }
 
+//remove the appropriate contact from the addressBook and then redisplay the container
 function removeContact(event) {
   let target = event.target;
   if (target.tagName.toLowerCase() === "i") { //if the icon is clicked
     target = target.parentNode; //set the target as the button anyway
   }
   addressBook.deleteAt(target.attributes["i"].value);
-  addressBook.display();
+  addressBook.display(); //redisplay the contact container
 }
 
 addressBook.display(); //initialize the contacts
-//addButton.addEventListener("click", addContact);
 
-//TODO: handle clicking the icon as well
-main.addEventListener("click", function(event) { //add a listener to main that will only work on the buttons
-  if (event.target.classList.contains("add-btn")) {
-    addContact();
-  } else if (event.target.classList.contains("remove-btn") || event.target.parentNode.classList.contains("remove-btn")) {
+form.addEventListener("submit", addContact);
+contactsContainer.addEventListener("click", function(event) { //add a listener to the contact container for the remove buttons
+  if (event.target.classList.contains("remove-btn") || event.target.parentNode.classList.contains("remove-btn")) { //handles clicking the remove buttons or the icons inside them
     removeContact(event);
   }
 });
